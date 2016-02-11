@@ -1,11 +1,11 @@
 class Warehouse
-  include ProductsBag
+  attr_accessor :products
 
   # [X, Y] array
   attr_accessor :location
 
   def initialize(location)
     @location = location
-    @products = []
+    @products = ProductsBag.new
   end
 end
