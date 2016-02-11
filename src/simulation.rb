@@ -92,7 +92,7 @@ drones = []
 turns = @map[:turns]
 steps = []
 
-@map[:drones].times { |_| drones << Drone.new(warehouses.first.location) }
+@map[:drones].times { |_| drones << Drone.new(warehouses.first.location, @map[:max_payload]) }
 
 # Main bucle
 while turns > 0
@@ -103,7 +103,7 @@ while turns > 0
     orders.each do |order|
       next if order.in_progress
       # Order must be in progress
-      
+      free_drones.first.schedule_order(order, warehouses)
     end
   end
 
