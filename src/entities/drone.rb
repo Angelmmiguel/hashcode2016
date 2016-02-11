@@ -42,6 +42,7 @@ class Drone
 
       if ProductTypeManager.weight(type) > weight_available
         @products.products.each do |type, quantity|
+          next if quantity == 0
           deliver(order, type, quantity)
         end
       end
@@ -64,6 +65,7 @@ class Drone
     end
 
     @products.products.each do |type, quantity|
+      next if quantity == 0
       deliver(order, type, quantity)
     end
   end

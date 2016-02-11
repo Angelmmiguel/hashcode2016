@@ -6,6 +6,9 @@ class Output
   end
 
   def self.bulk_file(path)
-    File.open(path, 'w') { |file| file.write(@commands.join("\n")) }
+    @commands.unshift(@commands.size)
+    File.open(path, 'w') do |file|
+      file.write(@commands.join("\n"))
+    end
   end
 end
