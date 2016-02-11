@@ -34,33 +34,6 @@ class Drone
     self
   end
 
-  private
-
-  def move(destination)
-    result = Math.sqrt(Math.abs(location[0] - destination[0])**2 +
-                       Math.abs(location[1] - destination[1])**2).ceil
-    @busy += result
-  end
-
-  def distance_to(destination)
-    Math.sqrt(Math.abs(location[0] - destination[0])**2 +
-              Math.abs(location[1] - destination[1])**2).ceil
-  end
-
-  def weight_current
-    @products.products.map do |p|
-      if p.nil?
-        0
-      else
-        ProductTypeManager.weight(p)
-      end
-    end
-  end
-
-  def weight_available
-    @max_weight - weight_current
-  end
-
   def schedule_order(order, warehouses)
     started_location = location
 
@@ -93,5 +66,32 @@ class Drone
     @products.products.each_with_index do |quantity, type|
       deliver(order, type, quantity)
     end
+  end
+
+  private
+
+  def move(destination)
+    result = Math.sqrt(Math.abs(location[0] - destination[0])**2 +
+                       Math.abs(location[1] - destination[1])**2).ceil
+    @busy += result
+  end
+
+  def distance_to(destination)
+    Math.sqrt(Math.abs(location[0] - destination[0])**2 +
+              Math.abs(location[1] - destination[1])**2).ceil
+  end
+
+  def weight_current
+    (@products.products.map do |p|
+      if p.nil?
+        0
+      else
+        ProductTypeManager.weight(p)
+      end
+    end).max || 0
+  end
+
+  def weight_available
+    @max_weight - weight_current
   end
 end

@@ -101,7 +101,7 @@ steps = []
 @map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location, @map[:max_payload]) }
 
 1000000.times do |i|
-  seed = i + ARGV[1]
+  seed = i + ARGV[1].to_i
   orders = orders.shuffle(random: Random.new(seed))
 
   # Main bucle
