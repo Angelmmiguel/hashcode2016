@@ -6,7 +6,7 @@ class Products
     @quantity = 0
   end
 
-  def increase
-    @quantity += 1
+  def increase_by(quantity)
+    @quantity += quantity
   end
 end
