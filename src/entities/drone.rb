@@ -1,8 +1,9 @@
 class Drone
 
-  attr_reader :location, :busy
+  attr_reader :location, :busy, :id
 
-  def initialize(location)
+  def initialize(ind, location)
+    @id = id
     @products = ProductsBag.new
     @location = location
     @busy = 0
@@ -29,17 +30,18 @@ class Drone
       warehouse.products.remove(type, quantity)
       products.add(type, quantity)
       @busy += 1
+      Output.add_command("#{@id} L #{warehouse.id} #{type} #{quantity}")
     else
       puts 'ERROR DRONE is not at the position of WAREHOUSE'
     end
     self
   end
 
-  def deliver(destination, type, quantity)
+  def deliver(destination, order, type, quantity)
     if location == destination
       @busy += 1
       products.remove(type, quantity)
-      1
+      Output.add_command("#{@id} D #{order.id} #{type} #{quantity}")
     else
       puts 'ERROR DRONE is not at the position of the client'
     end

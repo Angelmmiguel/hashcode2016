@@ -3,6 +3,7 @@ require_relative 'entities/products_bag'
 require_relative 'entities/order'
 require_relative 'entities/drone'
 require_relative 'entities/warehouse'
+require_relative 'entities/output'
 require 'pry'
 
 @products = []
@@ -58,8 +59,8 @@ end
 
 def build_warehouses
   warehouses = []
-  @warehouses.each do |wh|
-    new_wh = Warehouse.new([wh[:row], wh[:col]])
+  @warehouses.each_with_index do |wh, i|
+    new_wh = Warehouse.new(i, [wh[:row], wh[:col]])
     wh[:n_products].each_with_index do |n, i|
       new_wh.products.add(i, n.to_i)
     end
@@ -70,8 +71,8 @@ end
 
 def build_orders
   orders = []
-  @orders.each do |order|
-    new_order = Order.new([order[:row], order[:col]])
+  @orders.each_with_index do |order, i|
+    new_order = Order.new(i, [order[:row], order[:col]])
     order[:products_types].each do |n|
       new_order.products.add(n.to_i)
     end
@@ -92,7 +93,7 @@ drones = []
 turns = @map[:turns]
 steps = []
 
-@map[:drones].times { |_| drones << Drone.new(warehouses.first.location) }
+@map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location) }
 
 # Main bucle
 while turns > 0
@@ -103,7 +104,7 @@ while turns > 0
     orders.each do |order|
       next if order.in_progress
       # Order must be in progress
-      
+
     end
   end
 
