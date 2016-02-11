@@ -13,7 +13,7 @@ require 'pry'
 
 def parse_file
   # Read File
-  file = File.read('datasets/busy_day.in')
+  file = File.read(ARGV[1])
 
   # Get Lines
   lines = file.split("\n")
@@ -95,20 +95,24 @@ steps = []
 
 @map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location) }
 
-# Main bucle
-while turns > 0
-  free_drones = drones.select { |drone| !drone.busy? }
+1000000.times do |i|
+  seed = i + ARGV[2]
+  orders = orders.shuffle(random: Random.new(seed))
 
-  unless free_drones.empty?
-    # Start the turn
-    orders.each do |order|
-      next if order.in_progress
-      # Order must be in progress
+  # Main bucle
+  while turns > 0
+    free_drones = drones.select { |drone| !drone.busy? }
 
+    unless free_drones.empty?
+      # Start the turn
+      orders.each do |order|
+        next if order.in_progress
+        # Order must be in progress
+      end
     end
-  end
 
-  # Update turn
-  drones.each(&:next_turn)
-  turns -= 1
+    # Update turn
+    drones.each(&:next_turn)
+    turns -= 1
+  end
 end
