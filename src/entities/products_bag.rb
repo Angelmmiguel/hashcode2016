@@ -12,6 +12,11 @@ class ProductsBag
 
   def remove(type, quantity = 1)
     @products[type] ||= 0
-    @products[type] += quantity
+
+    if quantity > products[type]
+      puts "No enough products of type #{type}"
+    else
+      @products[type] -= quantity
+    end
   end
 end
