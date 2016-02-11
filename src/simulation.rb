@@ -65,7 +65,7 @@ end
 def build_warehouses
   warehouses = []
   @warehouses.each_with_index do |wh, i|
-    new_wh = Warehouse.new(i, [wh[:row], wh[:col]])
+    new_wh = Warehouse.new(i, [wh[:row].to_i, wh[:col].to_i])
     wh[:n_products].each_with_index do |n, i|
       new_wh.products.add(i, n.to_i)
     end
@@ -77,7 +77,7 @@ end
 def build_orders
   orders = []
   @orders.each_with_index do |order, i|
-    new_order = Order.new(i, [order[:row], order[:col]])
+    new_order = Order.new(i, [order[:row].to_i, order[:col].to_i])
     order[:products_types].each do |n|
       new_order.products.add(n.to_i)
     end
