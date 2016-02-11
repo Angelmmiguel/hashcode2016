@@ -1,3 +1,9 @@
 class Drone
-  attr_reader :location
+  include ProductsBag
+
+  attr_reader :location, :destination
+
+  def initialize
+    @products = []
+  end
 end
