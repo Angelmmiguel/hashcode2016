@@ -4,7 +4,9 @@ class Order
   # Coordinates array [X, Y]
   attr_accessor :destination
 
-  def initialize
+
+  def initialize(destination)
+    @destination = destination
     @products = ProductsBag.new
   end
 end
