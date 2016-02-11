@@ -1,5 +1,4 @@
 class Drone
-  include ProductsBag
 
   attr_reader :location, :busy
 
