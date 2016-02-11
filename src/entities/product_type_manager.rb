@@ -1,4 +1,4 @@
-class ProductType
+class ProductTypeManager
   @types = []
 
   def self.load(types)
