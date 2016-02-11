@@ -5,6 +5,7 @@ class Drone
   def initialize(location)
     @products = ProductsBag.new
     @location = location
+    @busy = 0
   end
 
   def busy?
