@@ -96,10 +96,15 @@ steps = []
 
 # Main bucle
 while turns > 0
-  # Start the turn
-  orders.each do |order|
-    next if order.in_progress
+  free_drones = drones.select { |drone| !drone.busy? }
 
+  unless free_drones.empty?
+    # Start the turn
+    orders.each do |order|
+      next if order.in_progress
+      # Order must be in progress
+      
+    end
   end
 
   # Update turn
