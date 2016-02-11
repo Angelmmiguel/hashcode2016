@@ -17,6 +17,7 @@ class ProductsBag
       puts "No enough products of type #{type}"
     else
       @products[type] -= quantity
+      @products.delete type if @products[type] == 0
     end
   end
 end

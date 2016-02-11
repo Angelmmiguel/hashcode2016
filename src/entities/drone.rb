@@ -42,13 +42,13 @@ class Drone
 
       if ProductTypeManager.weight(type) > weight_available
         @products.products.each do |type, quantity|
-          next if quantity == 0
           deliver(order, type, quantity)
         end
       end
 
       warehouse_with_product = warehouses.select do |w|
         # TODO: ALOMEJOR SE NECESITAN MAS DE UNO
+        next if w.products.products[type].nil?
         w.products.products[type] >= quantity
       end
 
@@ -65,7 +65,6 @@ class Drone
     end
 
     @products.products.each do |type, quantity|
-      next if quantity == 0
       deliver(order, type, quantity)
     end
   end
