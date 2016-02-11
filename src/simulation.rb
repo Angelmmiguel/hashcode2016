@@ -2,6 +2,7 @@ require_relative 'entities/product_type_manager'
 require_relative 'entities/products_bag'
 require_relative 'entities/order'
 require_relative 'entities/warehouse'
+require 'pry'
 
 @products = []
 @warehouses = []
@@ -63,6 +64,7 @@ def build_warehouses
     end
     warehouses << new_wh
   end
+  warehouses
 end
 
 def build_orders
@@ -74,6 +76,7 @@ def build_orders
     end
     orders << new_order
   end
+  orders
 end
 
 # parse file and fill @products, @warehouses, @orders and @map
