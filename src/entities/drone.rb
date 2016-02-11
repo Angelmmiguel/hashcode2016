@@ -83,7 +83,7 @@ class Drone
   def weight_current
     (@products.products.map do |type, quantity|
       ProductTypeManager.weight(type) * quantity
-    end).max || 0
+    end).inject(0){|sum,x| sum + x } || 0
   end
 
   def weight_available
