@@ -1,7 +1,7 @@
 class Drone
   attr_reader :location, :busy, :id
 
-  def initialize(ind, location, max_weight)
+  def initialize(id, location, max_weight)
     @id = id
     @products = ProductsBag.new
     @location = location
@@ -20,7 +20,7 @@ class Drone
   def load(warehouse, type, quantity)
     move(warehouse.location)
     warehouse.products.remove(type, quantity)
-    products.add(type, quantity)
+    @products.add(type, quantity)
     @busy += 1
     Output.add_command("#{@id} L #{warehouse.id} #{type} #{quantity}")
     self
@@ -29,7 +29,7 @@ class Drone
   def deliver(order, type, quantity)
     move(order.destination)
     @busy += 1
-    products.remove(type, quantity)
+    @products.remove(type, quantity)
     Output.add_command("#{@id} D #{order.id} #{type} #{quantity}")
     self
   end
@@ -37,11 +37,11 @@ class Drone
   def schedule_order(order, warehouses)
     started_location = location
 
-    order.products.products.each_with_index do |quantity, type|
+    order.products.products.each do |type, quantity|
       next if quantity.nil? || quantity == 0
 
       if ProductTypeManager.weight(type) > weight_available
-        @products.products.each_with_index do |quantity, type|
+        @products.products.each do |type, quantity|
           deliver(order, type, quantity)
         end
       end
@@ -63,7 +63,7 @@ class Drone
       end
     end
 
-    @products.products.each_with_index do |quantity, type|
+    @products.products.each do |type, quantity|
       deliver(order, type, quantity)
     end
   end
@@ -71,23 +71,17 @@ class Drone
   private
 
   def move(destination)
-    result = Math.sqrt(Math.abs(location[0] - destination[0])**2 +
-                       Math.abs(location[1] - destination[1])**2).ceil
-    @busy += result
+    @busy += distance_to(destination)
   end
 
   def distance_to(destination)
-    Math.sqrt(Math.abs(location[0] - destination[0])**2 +
-              Math.abs(location[1] - destination[1])**2).ceil
+    Math.sqrt((location[0] - destination[0]).abs**2 +
+              (location[1] - destination[1]).abs**2).ceil
   end
 
   def weight_current
-    (@products.products.map do |p|
-      if p.nil?
-        0
-      else
-        ProductTypeManager.weight(p)
-      end
+    (@products.products.map do |type, quantity|
+      ProductTypeManager.weight(type) * quantity
     end).max || 0
   end
 

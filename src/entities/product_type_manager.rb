@@ -6,6 +6,6 @@ class ProductTypeManager
   end
 
   def self.weight(type_num)
-    @types[type_num]
+    @types[type_num].to_i
   end
 end

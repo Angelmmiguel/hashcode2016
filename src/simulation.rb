@@ -98,9 +98,11 @@ drones = []
 turns = @map[:turns]
 steps = []
 
-@map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location, @map[:max_payload]) }
+@map[:drones].times do |x|
+  drones << Drone.new(x, warehouses.first.location, @map[:max_payload])
+end
 
-1000000.times do |i|
+1.times do |i|
   seed = i + ARGV[1].to_i
   orders = orders.shuffle(random: Random.new(seed))
 
@@ -113,12 +115,16 @@ steps = []
       orders.each do |order|
         next if order.in_progress
         # Order must be in progress
-        free_drones.first.schedule_order(order, warehouses)
+        my_drone = free_drones.shift
+        my_drone.schedule_order(order, warehouses) unless my_drone.nil?
       end
     end
 
     # Update turn
     drones.each(&:next_turn)
     turns -= 1
+    puts "Turns #{turns} / #{@map[:turns]}"
   end
+
+  Output.bulk_file("./solutions/#{ARGV[0]}-#{seed}")
 end
