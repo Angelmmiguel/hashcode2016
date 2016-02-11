@@ -21,7 +21,7 @@ def parse_file
 
   # Get Map
   %w(rows columns drones turns max_payload).each_with_index do |el, index|
-    @map[el] = headers[index]
+    @map[el.to_sym] = headers[index].to_i
   end
 
   # Ignore number of products
@@ -87,3 +87,20 @@ ProductTypeManager.load(@products)
 
 orders = build_orders
 warehouses = build_warehouses
+drones = []
+turns = @map[:turns]
+steps = []
+
+@map[:drones].times { |_| drones << Drone.new(warehouses.first.location) }
+
+# Main bucle
+while turns > 0
+  # Start the turn
+  orders.each do |order|
+    
+  end
+
+  # Update turn
+  drones.each(&:next_turn)
+  turns -= 1
+end
