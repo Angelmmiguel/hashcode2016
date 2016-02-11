@@ -1,7 +1,8 @@
 class Drone
-  attr_reader :location, :busy
+  attr_reader :location, :busy, :id
 
-  def initialize(location, max_weight)
+  def initialize(ind, location, max_weight)
+    @id = id
     @products = ProductsBag.new
     @location = location
     @busy = 0
@@ -16,34 +17,29 @@ class Drone
     @busy -= 1 if @busy != 0
   end
 
+  def load(warehouse, type, quantity)
+    move(warehouse.location)
+    warehouse.products.remove(type, quantity)
+    products.add(type, quantity)
+    @busy += 1
+    Output.add_command("#{@id} L #{warehouse.id} #{type} #{quantity}")
+    self
+  end
+
+  def deliver(order, type, quantity)
+    move(order.destination)
+    @busy += 1
+    products.remove(type, quantity)
+    Output.add_command("#{@id} D #{order.id} #{type} #{quantity}")
+    self
+  end
+
+  private
+
   def move(destination)
     result = Math.sqrt(Math.abs(location[0] - destination[0])**2 +
                        Math.abs(location[1] - destination[1])**2).ceil
     @busy += result
-    # Return number of turns
-    self
-  end
-
-  def load(warehouse, type, quantity)
-    if location == warehouse.location
-      warehouse.products.remove(type, quantity)
-      products.add(type, quantity)
-      @busy += 1
-    else
-      puts 'ERROR DRONE is not at the position of WAREHOUSE'
-    end
-    self
-  end
-
-  def deliver(destination, type, quantity)
-    if location == destination
-      @busy += 1
-      products.remove(type, quantity)
-      1
-    else
-      puts 'ERROR DRONE is not at the position of the client'
-    end
-    self
   end
 
   def distance_to(destination)

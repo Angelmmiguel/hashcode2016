@@ -3,6 +3,7 @@ require_relative 'entities/products_bag'
 require_relative 'entities/order'
 require_relative 'entities/drone'
 require_relative 'entities/warehouse'
+require_relative 'entities/output'
 require 'pry'
 
 @products = []
@@ -12,7 +13,7 @@ require 'pry'
 
 def parse_file
   # Read File
-  file = File.read('datasets/busy_day.in')
+  file = File.read(ARGV[1])
 
   # Get Lines
   lines = file.split("\n")
@@ -58,8 +59,8 @@ end
 
 def build_warehouses
   warehouses = []
-  @warehouses.each do |wh|
-    new_wh = Warehouse.new([wh[:row], wh[:col]])
+  @warehouses.each_with_index do |wh, i|
+    new_wh = Warehouse.new(i, [wh[:row], wh[:col]])
     wh[:n_products].each_with_index do |n, i|
       new_wh.products.add(i, n.to_i)
     end
@@ -70,8 +71,8 @@ end
 
 def build_orders
   orders = []
-  @orders.each do |order|
-    new_order = Order.new([order[:row], order[:col]])
+  @orders.each_with_index do |order, i|
+    new_order = Order.new(i, [order[:row], order[:col]])
     order[:products_types].each do |n|
       new_order.products.add(n.to_i)
     end
@@ -92,22 +93,27 @@ drones = []
 turns = @map[:turns]
 steps = []
 
-@map[:drones].times { |_| drones << Drone.new(warehouses.first.location, @map[:max_payload]) }
+@map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location, @map[:max_payload]) }
 
-# Main bucle
-while turns > 0
-  free_drones = drones.select { |drone| !drone.busy? }
+1000000.times do |i|
+  seed = i + ARGV[2]
+  orders = orders.shuffle(random: Random.new(seed))
 
-  unless free_drones.empty?
-    # Start the turn
-    orders.each do |order|
-      next if order.in_progress
-      # Order must be in progress
-      free_drones.first.schedule_order(order, warehouses)
+  # Main bucle
+  while turns > 0
+    free_drones = drones.select { |drone| !drone.busy? }
+
+    unless free_drones.empty?
+      # Start the turn
+      orders.each do |order|
+        next if order.in_progress
+        # Order must be in progress
+        free_drones.first.schedule_order(order, warehouses)
+      end
     end
-  end
 
-  # Update turn
-  drones.each(&:next_turn)
-  turns -= 1
+    # Update turn
+    drones.each(&:next_turn)
+    turns -= 1
+  end
 end

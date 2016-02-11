@@ -1,10 +1,8 @@
 class Warehouse
-  attr_accessor :products
+  attr_accessor :location, :id, :products
 
-  # [X, Y] array
-  attr_accessor :location
-
-  def initialize(location)
+  def initialize(id, location)
+    @id = id
     @location = location
     @products = ProductsBag.new
   end

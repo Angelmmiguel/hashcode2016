@@ -1,13 +1,11 @@
 class Order
-  attr_accessor :products
-
   # Coordinates array [X, Y]
-  attr_accessor :destination, :in_progress
+  attr_accessor :destination, :in_progress, :id, :products
 
-
-  def initialize(destination)
+  def initialize(id, destination)
     @destination = destination
     @products = ProductsBag.new
     @in_progress = false
+    @id = id
   end
 end
