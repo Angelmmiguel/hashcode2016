@@ -1,6 +1,7 @@
 require_relative 'entities/product_type_manager'
 require_relative 'entities/products_bag'
 require_relative 'entities/order'
+require_relative 'entities/drone'
 require_relative 'entities/warehouse'
 require 'pry'
 
@@ -97,7 +98,8 @@ steps = []
 while turns > 0
   # Start the turn
   orders.each do |order|
-    
+    next if order.in_progress
+
   end
 
   # Update turn
