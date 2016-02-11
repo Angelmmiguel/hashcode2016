@@ -6,6 +6,11 @@ require_relative 'entities/warehouse'
 require_relative 'entities/output'
 require 'pry'
 
+if ARGV.count != 2
+  puts 'usage: simulation.rb [file] [initial seed]'
+  exit
+end
+
 @products = []
 @warehouses = []
 @orders = []
@@ -13,7 +18,7 @@ require 'pry'
 
 def parse_file
   # Read File
-  file = File.read(ARGV[1])
+  file = File.read(ARGV[0])
 
   # Get Lines
   lines = file.split("\n")
@@ -96,7 +101,7 @@ steps = []
 @map[:drones].times { |x| drones << Drone.new(x, warehouses.first.location, @map[:max_payload]) }
 
 1000000.times do |i|
-  seed = i + ARGV[2]
+  seed = i + ARGV[1]
   orders = orders.shuffle(random: Random.new(seed))
 
   # Main bucle
